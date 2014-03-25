@@ -2,6 +2,7 @@ Trivium:
   Python:
     ☐ complete implementation
     ☐ testbench
+    ☐ change to byte oriented implementation (i.e. output keystream in multiple of 8bits)
   Other Languages:
     ☐ start implementation
 
