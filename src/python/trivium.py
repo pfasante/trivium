@@ -1,5 +1,6 @@
 from collections import deque
 from itertools import repeat
+from sys import version_info
 
 
 class Trivium:
@@ -76,7 +77,11 @@ def main():
     trivium = Trivium(IV, KEY)
 
     for i in range(8*4):
-        print(trivium.keystream().__next__())
+        if version_info[0] == 3:
+            print(trivium.keystream().__next__())
+        elif version_info[0] == 2:
+            print(trivium.keystream().next())
+
 
 if __name__ == "__main__":
     main()
