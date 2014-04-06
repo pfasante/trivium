@@ -72,15 +72,24 @@ class Trivium:
 
 def main():
 
-    KEY = 0xFFFFFFFFFFFFFFFFFFF0
-    IV = 0xFFFFFFFFFFFFFFFFFFFF
-    trivium = Trivium(IV, KEY)
+    KEY = 0x80000000000000000000
+    IV = 0x00000000000000000000
+    trivium = Trivium(iv=IV, key=KEY)
 
-    for i in range(8*4):
-        if version_info[0] == 3:
-            print(trivium.keystream().__next__())
-        elif version_info[0] == 2:
-            print(trivium.keystream().next())
+    keystream = ""
+    for i in range(16):
+        key_byte = 0
+        for j in range(8):
+            if version_info[0] == 3:
+                key_bit = trivium.keystream().__next__()
+            elif version_info[0] == 2:
+                key_bit = trivium.keystream().next()
+            else:
+                print("invalid python version")
+                break
+            key_byte = (key_byte << 1) | key_bit
+        keystream += "{0:02X}".format(key_byte)
+    print(keystream)
 
 
 if __name__ == "__main__":
