@@ -59,7 +59,7 @@ class Trivium:
 
         t_1 = t_1 ^ (self.state[90] & self.state[91]) ^ self.state[170]
         t_2 = t_2 ^ (self.state[174] & self.state[175]) ^ self.state[263]
-        t_3 = t_3 ^ (self.state[285] & self.state[287]) ^ self.state[68]
+        t_3 = t_3 ^ (self.state[285] & self.state[286]) ^ self.state[68]
 
         self.state.rotate(1)
 
