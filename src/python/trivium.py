@@ -74,7 +74,7 @@ def main():
 
     KEY = 0x80000000000000000000
     IV = 0x00000000000000000000
-    trivium = Trivium(iv=IV, key=KEY)
+    trivium = Trivium(KEY, IV)
 
     keystream = ""
     for i in range(16):
