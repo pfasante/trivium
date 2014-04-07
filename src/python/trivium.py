@@ -7,29 +7,23 @@ class Trivium:
     def __init__(self, key, iv):
         """in the beginning we need to transform the key as well as the IV.
         Afterwards we initialize the state."""
-        self.state0 = None
-        self.state1 = None
-        self.state2 = None
+        self.state = None
         self.counter = 0
         self.key = key  # self._setLength(key)
         self.iv = iv  # self._setLength(iv)
 
         # Initialize state
+        # len 100
         init_list = list(map(int, list(self.key)))
         init_list += list(repeat(0, 20))
-        self.state0 = deque(init_list)
-
-        init_list = list(map(int, list(self.iv)))
+        # len 84
+        init_list += list(map(int, list(self.iv)))
         init_list += list(repeat(0, 4))
-        self.state1 = deque(init_list)
-
-        init_list = list(repeat(0, 108))
+        # len 111
+        init_list += list(repeat(0, 108))
         init_list += list([1, 1, 1])
-        self.state2 = deque(init_list)
+        self.state = deque(init_list)
 
-        print(self.state0, len(self.state0))
-        print(self.state1, len(self.state1))
-        print(self.state2, len(self.state2))
         # Do 4 full cycles, drop output
         for i in range(4*288):
             self._gen_keystream()
@@ -61,27 +55,25 @@ class Trivium:
     def _gen_keystream(self):
         """this method generates triviums keystream"""
 
-        a_1 = self.state0[90] & self.state0[91]
-        a_2 = self.state1[81] & self.state1[82]
-        a_3 = self.state2[108] & self.state2[109]
+        a_1 = self.state[90] & self.state[91]
+        a_2 = self.state[181] & self.state[182]
+        a_3 = self.state[292] & self.state[293]
 
-        t_1 = self.state0[65] ^ self.state0[92]
-        t_2 = self.state1[68] ^ self.state1[83]
-        t_3 = self.state2[65] ^ self.state2[110]
+        t_1 = self.state[65] ^ self.state[92]
+        t_2 = self.state[168] ^ self.state[183]
+        t_3 = self.state[249] ^ self.state[294]
 
         out = t_1 ^ t_2 ^ t_3
 
-        s_1 = a_3 ^ self.state0[68] ^ t_3
-        s_2 = a_1 ^ self.state1[77] ^ t_1
-        s_3 = a_2 ^ self.state2[86] ^ t_2
+        s_1 = a_1 ^ self.state[177] ^ t_1
+        s_2 = a_2 ^ self.state[270] ^ t_2
+        s_3 = a_3 ^ self.state[68] ^ t_3
 
-        self.state0.rotate(1)
-        self.state1.rotate(1)
-        self.state2.rotate(1)
+        self.state.rotate(1)
 
-        self.state0[0] = s_1
-        self.state1[0] = s_2
-        self.state2[0] = s_3
+        self.state[0] = s_3
+        self.state[100] = s_1
+        self.state[184] = s_2
 
         return out
 

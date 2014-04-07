@@ -8,6 +8,6 @@ def pytest_funcarg__input_data(request):
 
 
 def test_input_transformation(input_data):
-    datatest = Trivium("X", "X")
-    result = datatest._setlength(input_data)
+    datatest = Trivium(0xFFF, 0x00)
+    result = datatest._setLength(input_data)
     assert result == 00000000000000000000000000000000000000000000000000000000000000000000000000000000
