@@ -76,17 +76,20 @@ def main():
     IV = 0x00000000000000000000
     trivium = Trivium(KEY, IV)
 
+    # Check python version
+    if version_info[0] == 2:
+        next_key_bit = trivium.keystream().next
+    elif version_info[0] == 3:
+        next_key_bit = trivium.keystream().__next__
+    else:
+        print("invalid python version")
+        return
+
     keystream = ""
     for i in range(16):
         key_byte = 0
         for j in range(8):
-            if version_info[0] == 3:
-                key_bit = trivium.keystream().__next__()
-            elif version_info[0] == 2:
-                key_bit = trivium.keystream().next()
-            else:
-                print("invalid python version")
-                break
+            key_bit = next_key_bit()
             key_byte = (key_byte << 1) | key_bit
         keystream += "{0:02X}".format(key_byte)
     print(keystream)
